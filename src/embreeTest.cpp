@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <tiny_obj_loader.h>
 #include <iostream>
-#include <glm/glm.hpp>
 #include "EmbreeScene.hpp"
 #include "Vec.hpp"
 #include "Camera.hpp" 
