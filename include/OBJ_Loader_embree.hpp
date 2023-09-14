@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <tiny_obj_loader.h>
 #include <string>
 #include <vector>

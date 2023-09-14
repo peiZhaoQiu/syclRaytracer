@@ -6,6 +6,7 @@
 #include <limits>
 #include <array>
 #include <cmath>
+#include <float.h>
 
 class Bounds3
 {
@@ -65,6 +66,44 @@ class Bounds3
                     p.y <= b.pMax.y && p.z >= b.pMin.z && p.z <= b.pMax.z);
         }
 
+        // inline const Vector3f& operator[](int i) const{
+
+        // }
+
+
+        inline bool IntersectP(const Ray& ray, const Vec3f& invDir, const std::array<int, 3>& dirIsNeg) const
+        {
+            float tEnter = FLT_MIN;
+            float tExit = FLT_MAX;
+
+            for (int i = 0; i < 3; ++i)
+            {
+                float t_min = (pMin[i] - ray.origin[i]) * invDir[i];
+                float t_max = (pMax[i] - ray.origin[i]) * invDir[i];
+                if (dirIsNeg[i] == 0)
+                    std::swap(t_min, t_max); // note: here must be ==0, because dirIsNeg is actually int(x>0)
+                tEnter = std::max(t_min, tEnter);
+                tExit = std::min(t_max, tExit);
+            }
+            return tEnter <= tExit && tExit >= 0;
+        }
+
+
+        inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)
+        {
+            return Bounds3(
+                Vec3f( fmin(b1.pMin.x, b2.pMin.x), fmin(b1.pMin.y, b2.pMin.y),fmin(b1.pMin.z, b2.pMin.z) ),
+                Vec3f( fmax(b1.pMax.x, b2.pMax.x), fmax(b1.pMax.y, b2.pMax.y),fmax(b1.pMax.z, b2.pMax.z) )
+            );
+        }
+
+        inline Bounds3 Union(const Bounds3& b, const Vec3f& p)
+        {
+            return Bounds3(
+                Vec3f( fmin(b.pMin.x, p.x), fmin(b.pMin.y, p.y),fmin(b.pMin.z, p.z) ),
+                Vec3f( fmax(b.pMax.x, p.x), fmax(b.pMax.y, p.y),fmax(b.pMax.z, p.z) )
+            );
+        }
 
 };
 
