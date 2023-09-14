@@ -51,7 +51,19 @@ class Bounds3
             );
         }
 
+        bool Overlaps(const Bounds3& b1, const Bounds3& b2)
+        {
+            bool x = (b1.pMax.x >= b2.pMin.x) && (b1.pMin.x <= b2.pMax.x);
+            bool y = (b1.pMax.y >= b2.pMin.y) && (b1.pMin.y <= b2.pMax.y);
+            bool z = (b1.pMax.z >= b2.pMin.z) && (b1.pMin.z <= b2.pMax.z);
+            return (x && y && z);
+        }
 
+        bool Inside(const Vec3& p, const Bounds3& b)
+        {
+            return (p.x >= b.pMin.x && p.x <= b.pMax.x && p.y >= b.pMin.y &&
+                    p.y <= b.pMax.y && p.z >= b.pMin.z && p.z <= b.pMax.z);
+        }
 
 
 };
