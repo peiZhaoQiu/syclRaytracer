@@ -88,6 +88,9 @@ class Bounds3
             return tEnter <= tExit && tExit >= 0;
         }
 
+};
+
+
 
         inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)
         {
@@ -104,7 +107,3 @@ class Bounds3
                 Vec3f( fmax(b.pMax.x, p.x), fmax(b.pMax.y, p.y),fmax(b.pMax.z, p.z) )
             );
         }
-
-};
-
-
