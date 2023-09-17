@@ -57,7 +57,7 @@ class Scene
             first = false;
         }
 
-        float p = glm::abs(get_random_float()) * emitArea;
+        float p = std::abs(get_random_float()) * emitArea;
         float area = 0;
         for (size_t i = 0; i < _objectsList.size(); i++)
         {

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "BVH.hpp"
+#include <queue>
 
 BVHAccel::BVHAccel(std::vector<Object*> p, int maxPrimsInNode, SplitMethod splitMethod): maxPrimsInNode(maxPrimsInNode), splitMethod(splitMethod), primitives(std::move(p))
 {
@@ -12,8 +13,10 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
 {
 
     BVHNode* node = new BVHNode();
-    Bounds3 bounds;
-    if (objects.size() == 1)
+    if (objects.size() == 0){
+        return node;
+    } 
+    else if (objects.size() == 1)
     {
         node->object = std::make_shared<Object>(*objects[0]);
         node->bounds = objects[0]->getBounds();
@@ -31,9 +34,87 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
         node->object = nullptr;
         return node;
     }
-    
-        
+    else
+    {
+        Bounds3 centroidBounds;
+        for (auto object : objects)
+        {
+            centroidBounds = Union(centroidBounds, object->getBounds().Centroid());
+        }
+        int dim = centroidBounds.maxExtent();
+        if(dim == 0)
+        {
+            std::sort(objects.begin(), objects.end(), [](Object* a, Object* b) {
+                return a->getBounds().Centroid().x < b->getBounds().Centroid().x;
+            });
+        }
+        else if(dim == 1)
+        {
+            std::sort(objects.begin(), objects.end(), [](Object* a, Object* b) {
+                return a->getBounds().Centroid().y < b->getBounds().Centroid().y;
+            });
+        }
+        else if(dim == 2)
+        {
+            std::sort(objects.begin(), objects.end(), [](Object* a, Object* b) {
+                return a->getBounds().Centroid().z < b->getBounds().Centroid().z;
+            });
+        }
+        int mid = objects.size() / 2;
+        node->left = std::make_shared<BVHNode>(build(std::vector<Object*>(objects.begin(), objects.begin() + mid)));
+        node->right = std::make_shared<BVHNode>(build(std::vector<Object*>(objects.begin() + mid, objects.end()))); 
 
+        node->bounds = Union(node->left->bounds, node->right->bounds);
+        node->area = node->left->area + node->right->area;
+
+    }    
+
+    return node;   
+}
+
+Intersection BVHAccel::Intersect(const Ray& ray) const
+{
+    Intersection inter;
+    if (!root) return inter;
+    inter = getIntersection(root, ray);
+    return inter;
+}
+
+Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) const
+{
+    Intersection inter;
+
+    Vec3f indiv(1.0f / ray.direction.x, 1.0f / ray.direction.y, 1.0f / ray.direction.z);
+    std::array<int, 3> dirIsNeg = {ray.direction.x >0, ray.direction.y >0, ray.direction.z >0};
+
+    if(!node->bounds.IntersectP(ray, indiv, dirIsNeg)){return inter;}
+
+    std::queue<BVHNode*> q;
+    q.push(const_cast<BVHNode*>(node));
+    while(!q.empty())
+    {
+        BVHNode* cur = q.front();
+        q.pop();
+        if(cur->object)
+        {
+            Intersection tmp = cur->object->getIntersection(ray);
+            if(inter._distance > tmp._distance)
+            {
+                inter = tmp;
+            }
+        }
+        if (cur->left)
+        {
+            q.push(cur->left.get());
+        }
+
+        if (cur->right)
+        {
+            q.push(cur->right.get());
+        }
+        
+    }
+    return inter;
 }
 
 

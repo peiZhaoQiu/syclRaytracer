@@ -40,7 +40,7 @@ class BVHAccel
         ~BVHAccel();
 
         Intersection Intersect(const Ray& ray) const;
-        Intersection getIntersection(BVHNode* node, const Ray& ray) const;
+        Intersection getIntersection(const BVHNode* node, const Ray& ray) const;
         bool IntersectP(const Ray& ray) const;
         BVHNode* root;
 
