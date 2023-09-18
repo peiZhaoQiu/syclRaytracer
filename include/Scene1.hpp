@@ -17,6 +17,23 @@ void Scene::buildBVH() {
     this->_bvh = new BVHAccel(_objectsList, 1, BVHAccel::SplitMethod::NAIVE);
 }
 
+
+Intersection Scene::castRay(Ray inputRay)
+{
+    Intersection result;
+
+    if (this->_bvh == nullptr){
+        printf(" - BVH not built, building...\n");
+        this->buildBVH();
+    }
+
+    if (this->_bvh != nullptr){
+        result = this->_bvh->intersect(inputRay);
+    }
+
+    return result;
+}
+
 void Scene::addMeshObj(std::string objFilePath, std::string objFile)
 {
     OBJ_result result = OBJ_Loader::addObject(objFilePath, objFile);

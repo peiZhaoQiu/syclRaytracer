@@ -46,4 +46,55 @@ class Triangle : public Geometry
 };
 
 
+Intersection Triangle::getIntersection(const Ray& ray) 
+{
+    Intersection intersection;
+    if(dotProduct(normal,ray.direction) > 0)
+    {
+        intersection._hit = false;
+        return intersection;
+    }
+
+    double u,v,t_tmp = 0;
+    Vec3f pvec = crossProduct(ray.direction,e2);
+    double det = dotProduct(e1,pvec);
+    if(fabs(det) < MyEPSILON)
+    {
+        intersection._hit = false;
+        return intersection;
+    }
+    double inv_det = 1.0f / det;
+    Vec3f tvec = ray.origin - _v1;
+    u = dotProduct(tvec,pvec) * inv_det;
+    if(u < 0 || u > 1)
+    {
+        intersection._hit = false;
+        return intersection;
+    }
+    Vec3f qvec = crossProduct(tvec,e1);
+    v = dotProduct(ray.direction,qvec) * inv_det;
+    if(v < 0 || u + v > 1)
+    {
+        intersection._hit = false;
+        return intersection;
+    }
+    t_tmp = dotProduct(e2,qvec) * inv_det;
+
+    if(t_tmp < MyEPSILON)
+    {
+        intersection._hit = false;
+        return intersection;
+    }
+
+    intersection._hit = true;
+    
+    intersection._position = ray.origin + ray.direction * t_tmp;
+    intersection._normal = normal;
+    intersection._distance = t_tmp;
+    return intersection;
+
+
+}
+
+
 

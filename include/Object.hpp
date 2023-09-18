@@ -23,7 +23,12 @@ public:
     Bounds3 getBounds(){return _geometry->getBounds();}
 
     bool intersect(const Ray& ray){return _geometry->intersect(ray);}
-    Intersection getIntersection(const Ray& ray){return _geometry->getIntersection(ray);}
+    Intersection getIntersection(const Ray& ray)
+    {
+        auto intersection = _geometry->getIntersection(ray);
+        intersection._material = _material;
+        return intersection;
+    }
     float getArea(){return _geometry->getArea();}
     void Sample(Intersection &pos,float &pdf)
     {

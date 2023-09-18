@@ -1,7 +1,6 @@
 // Copyright 2009-2021 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 
-#include <embree4/rtcore.h>
 #include <stdio.h>
 #include <math.h>
 #include <limits>
