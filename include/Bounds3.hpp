@@ -92,18 +92,18 @@ class Bounds3
 
 
 
-        inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)
-        {
-            return Bounds3(
-                Vec3f( fmin(b1.pMin.x, b2.pMin.x), fmin(b1.pMin.y, b2.pMin.y),fmin(b1.pMin.z, b2.pMin.z) ),
-                Vec3f( fmax(b1.pMax.x, b2.pMax.x), fmax(b1.pMax.y, b2.pMax.y),fmax(b1.pMax.z, b2.pMax.z) )
-            );
-        }
+inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)
+{
+    return Bounds3(
+            Vec3f( fmin(b1.pMin.x, b2.pMin.x), fmin(b1.pMin.y, b2.pMin.y),fmin(b1.pMin.z, b2.pMin.z) ),
+            Vec3f( fmax(b1.pMax.x, b2.pMax.x), fmax(b1.pMax.y, b2.pMax.y),fmax(b1.pMax.z, b2.pMax.z) )
+        );
+}
 
-        inline Bounds3 Union(const Bounds3& b, const Vec3f& p)
-        {
-            return Bounds3(
-                Vec3f( fmin(b.pMin.x, p.x), fmin(b.pMin.y, p.y),fmin(b.pMin.z, p.z) ),
-                Vec3f( fmax(b.pMax.x, p.x), fmax(b.pMax.y, p.y),fmax(b.pMax.z, p.z) )
-            );
-        }
+inline Bounds3 Union(const Bounds3& b, const Vec3f& p)
+{
+        return Bounds3(
+            Vec3f( fmin(b.pMin.x, p.x), fmin(b.pMin.y, p.y),fmin(b.pMin.z, p.z) ),
+            Vec3f( fmax(b.pMax.x, p.x), fmax(b.pMax.y, p.y),fmax(b.pMax.z, p.z) )
+        );
+}

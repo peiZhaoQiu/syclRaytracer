@@ -9,6 +9,7 @@
 #include <string>
 #include <cmath>
 #include <iostream>
+#include "BVH.hpp"
 
 
 
@@ -29,20 +30,27 @@ class Scene
             size_t o_size = _objectsList.size();
             for (int i = o_size - 1; i >= 0; i--)
             {
-                if (_objectsList[i]._geometry != nullptr){
-                    delete _objectsList[i]._geometry;
+                if (_objectsList[i]->_geometry != nullptr){
+                    delete _objectsList[i]->_geometry;
+                }
+
+                if(_objectsList[i]->_material != nullptr){
+                    delete _objectsList[i]->_material;
                 }
             }
 
         }
 
-    virtual Intersection castRay(Ray inputRay)=0;
+    Intersection castRay(Ray inputRay);
 
-    virtual void addMeshObj(std::string objFilePath, std::string objFile)=0;
+    void addMeshObj(std::string objFilePath, std::string objFile);
 
 
-    std::vector<Object> _objectsList;
+    std::vector<Object*> _objectsList;
     std::vector<Material*> _materialList;
+
+    BVHAccel *_bvh;
+    void buildBVH();
 
     void sampleLight(Intersection &pos, float &pdf)
     {
@@ -50,8 +58,8 @@ class Scene
         static float emitArea = 0;
         if (first){
             for (size_t i = 0; i < _objectsList.size(); i++){
-                if (_objectsList[i]._material->hasEmission()){
-                    emitArea += _objectsList[i].getArea();
+                if (_objectsList[i]->_material->hasEmission()){
+                    emitArea += _objectsList[i]->getArea();
                 }
             }
             first = false;
@@ -61,11 +69,11 @@ class Scene
         float area = 0;
         for (size_t i = 0; i < _objectsList.size(); i++)
         {
-            if (_objectsList[i]._material->hasEmission())
+            if (_objectsList[i]->_material->hasEmission())
             {
-                area = area + _objectsList[i].getArea();
+                area = area + _objectsList[i]->getArea();
                 if (area >= p){
-                    _objectsList[i].Sample(pos, pdf);
+                    _objectsList[i]->Sample(pos, pdf);
                     //pdf /= emitArea;
                     return;
                 }

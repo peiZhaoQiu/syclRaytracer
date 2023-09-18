@@ -32,7 +32,10 @@ class Triangle : public Geometry
         pos._position = _v1 * (1.0f - x) + _v2 * (x * (1.0f - y)) + _v3 * (x * y);
         pos._normal = normal;
     }
- 
+
+
+    Bounds3 getBounds() override { return Union(Bounds3(_v1, _v2), _v3); }
+    
 
     private:
 
