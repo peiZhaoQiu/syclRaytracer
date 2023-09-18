@@ -9,16 +9,43 @@ BVHAccel::BVHAccel(std::vector<Object*> p, int maxPrimsInNode, SplitMethod split
 }
 
 
+BVHAccel::~BVHAccel()
+{
+    if (root != nullptr)
+    {
+        reclusiveDelete(root);
+    }
+    
+}
+
+
+void BVHAccel::reclusiveDelete(BVHNode* node)
+{
+    if(node->left != nullptr)  reclusiveDelete(node->left);
+    if(node->right != nullptr) reclusiveDelete(node->right);
+
+    if (node != nullptr){
+        if (node->object != nullptr){
+            delete node->object;
+        }
+        delete node;
+    }
+
+    
+}
+
+
 BVHNode* BVHAccel::build(std::vector<Object*> objects)
 {
 
     BVHNode* node = new BVHNode();
+    //std::shared_ptr<BVHNode> node = std::make_shared<BVHNode>();
     if (objects.size() == 0){
         return node;
     } 
     else if (objects.size() == 1)
     {
-        node->object = std::make_shared<Object>(*objects[0]);
+        node->object = objects[0];
         node->bounds = objects[0]->getBounds();
         node->area = objects[0]->getArea(); 
         node->left = nullptr;
@@ -27,8 +54,8 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
     }
     else if (objects.size() == 2)
     {
-        node-> left = std::make_shared<BVHNode>(build(std::vector<Object*>{objects[0]}));
-        node-> right = std::make_shared<BVHNode>(build(std::vector<Object*>{objects[1]}));
+        node-> left = build(std::vector<Object*>{objects[0]});
+        node-> right = build(std::vector<Object*>{objects[1]});
         node->bounds = Union(node->left->bounds, node->right->bounds);
         node->area = node->left->area + node->right->area;
         node->object = nullptr;
@@ -61,8 +88,8 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
             });
         }
         int mid = objects.size() / 2;
-        node->left = std::make_shared<BVHNode>(build(std::vector<Object*>(objects.begin(), objects.begin() + mid)));
-        node->right = std::make_shared<BVHNode>(build(std::vector<Object*>(objects.begin() + mid, objects.end()))); 
+        node->left = (build(std::vector<Object*>(objects.begin(), objects.begin() + mid)));
+        node->right = (build(std::vector<Object*>(objects.begin() + mid, objects.end()))); 
 
         node->bounds = Union(node->left->bounds, node->right->bounds);
         node->area = node->left->area + node->right->area;
@@ -105,12 +132,12 @@ Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) cons
         }
         if (cur->left)
         {
-            q.push(cur->left.get());
+            q.push(cur->left);
         }
 
         if (cur->right)
         {
-            q.push(cur->right.get());
+            q.push(cur->right);
         }
         
     }

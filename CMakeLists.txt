@@ -23,7 +23,7 @@ FIND_PACKAGE(embree 4 REQUIRED)
 #include all the files in the src directory
 file(GLOB SOURCES "src/*.cpp")
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/embreeTest.cpp ${SOURCES}) #external/tinyobjloader/tiny_obj_loader.cc)
+ADD_EXECUTABLE(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/Test.cpp ${SOURCES}) #external/tinyobjloader/tiny_obj_loader.cc)
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/external/tinyobjloader)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC tinyobjloader embree)
 # TARGET_LINK_LIBRARIES(${PROJECT_NAME} embree)

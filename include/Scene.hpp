@@ -16,7 +16,7 @@
 class Scene
 {
     public:
-        Scene(){};
+        Scene();
         ~Scene()
         {
             size_t n_size = _materialList.size();

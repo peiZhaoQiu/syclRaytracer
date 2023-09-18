@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec.hpp"
+#include "common.hpp"
 
 
 class Camera {
@@ -27,7 +28,7 @@ public:
 
     Vec3f getRayDirection(float x, float y) const {
         float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-        float halfFovTan = std::tan(glm::radians(fov) * 0.5f);
+        float halfFovTan = std::tan(Radians(fov) * 0.5f);
         float randomX = get_random_float();
         float randomY = get_random_float();
 

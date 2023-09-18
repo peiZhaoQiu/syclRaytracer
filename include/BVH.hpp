@@ -13,9 +13,9 @@ struct BVHNode
 {
 
     Bounds3 bounds;
-    std::shared_ptr<BVHNode> left;
-    std::shared_ptr<BVHNode> right;
-    std::shared_ptr<Object> object;
+    BVHNode* left;
+    BVHNode* right;
+    Object* object;
     int splitAxis=0, firstPrimOffset=0, nPrimitives=0;
     float area;
 
@@ -26,8 +26,8 @@ struct BVHNode
         object = nullptr;
     }
 
-    BVHNode(Bounds3 b, std::shared_ptr<Object> o): bounds(b), object(o) {}
-    BVHNode(Bounds3 b, std::shared_ptr<BVHNode> l, std::shared_ptr<BVHNode> r): bounds(b), left(l), right(r) {}
+    BVHNode(Bounds3 b, Object* o): bounds(b), object(o) {}
+    BVHNode(Bounds3 b, BVHNode* l, BVHNode* r): bounds(b), left(l), right(r) {}
 };
 
 
@@ -42,6 +42,7 @@ class BVHAccel
         Intersection Intersect(const Ray& ray) const;
         Intersection getIntersection(const BVHNode* node, const Ray& ray) const;
         bool IntersectP(const Ray& ray) const;
+        void reclusiveDelete(BVHNode* node);
         BVHNode* root;
 
         BVHNode* build(std::vector<Object*> objects);

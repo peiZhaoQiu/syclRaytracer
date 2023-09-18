@@ -8,12 +8,11 @@
 #include <stdio.h>
 #include <tiny_obj_loader.h>
 #include <iostream>
-#include "EmbreeScene.hpp"
 #include "Vec.hpp"
 #include "Camera.hpp" 
 #include <fstream>
 #include "common.hpp"
-
+#include "Scene1.hpp"
 
 /* 
  * This is only required to make the tutorial compile even when
@@ -40,7 +39,7 @@ int main(){
   std::string ModelDir = dir_path + "/Model/";
 
 
-  EmbreeScene scene;
+  Scene scene;
   scene.addMeshObj(ModelDir, "floor.obj");
   scene.addMeshObj(ModelDir, "tallbox.obj");
   scene.addMeshObj(ModelDir, "shortbox.obj");
@@ -56,7 +55,7 @@ int main(){
   // auto l = scene.castRay(ray1);
   // auto k = scene.castRay(ray2);
   // auto m = scene.castRay(ray3);
-  auto n = scene.castRay(ray4);
+  // auto n = scene.castRay(ray4);
   // Set up the camera parameters
   int imageWidth = 1200;
   int imageHeight = 960;
