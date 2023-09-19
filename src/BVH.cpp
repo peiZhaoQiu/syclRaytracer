@@ -91,7 +91,8 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
         node->left = (build(std::vector<Object*>(objects.begin(), objects.begin() + mid)));
         node->right = (build(std::vector<Object*>(objects.begin() + mid, objects.end()))); 
         node->object = nullptr;
-        node->bounds = Union(node->left->bounds, node->right->bounds);
+        //node->bounds = Union(node->left->bounds, node->right->bounds);
+        node->bounds = centroidBounds;
         node->area = node->left->area + node->right->area;
 
     }    
