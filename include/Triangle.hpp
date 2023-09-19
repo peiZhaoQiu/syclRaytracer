@@ -18,7 +18,7 @@ class Triangle : public Geometry
         ~Triangle(){}
 
     bool intersect(const Ray& ray) override{};
-    Intersection getIntersection(const Ray& ray) override{};
+    Intersection getIntersection(const Ray& ray) override;
         
          
     float getArea() override{

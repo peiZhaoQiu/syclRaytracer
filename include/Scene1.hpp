@@ -28,7 +28,7 @@ Intersection Scene::castRay(Ray inputRay)
     }
 
     if (this->_bvh != nullptr){
-        result = this->_bvh->intersect(inputRay);
+        result = this->_bvh->Intersect(inputRay);
     }
 
     return result;

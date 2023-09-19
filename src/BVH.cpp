@@ -112,7 +112,10 @@ Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) cons
     Intersection inter;
 
     Vec3f indiv(1.0f / ray.direction.x, 1.0f / ray.direction.y, 1.0f / ray.direction.z);
-    std::array<int, 3> dirIsNeg = {ray.direction.x >0, ray.direction.y >0, ray.direction.z >0};
+    std::array<int, 3> dirIsNeg;
+    dirIsNeg[0] = ray.direction.x >0; 
+    dirIsNeg[1] = ray.direction.y >0; 
+    dirIsNeg[2] = ray.direction.z >0; 
 
     if(!node->bounds.IntersectP(ray, indiv, dirIsNeg)){return inter;}
 

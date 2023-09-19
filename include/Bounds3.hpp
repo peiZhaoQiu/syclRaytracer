@@ -70,9 +70,19 @@ class Bounds3
 
         // }
 
-
-        inline bool IntersectP(const Ray& ray, const Vec3f& invDir, const std::array<int, 3>& dirIsNeg) const
+        inline const Vec3f& operator[](int i) const
         {
+            return (i == 0) ? pMin : pMax;
+        }
+
+
+        inline bool IntersectP(const Ray& ray, const Vec3f& invDir, const std::array<int, 3>& dirIsNeg) const;
+
+
+};
+
+inline bool Bounds3::IntersectP(const Ray& ray, const Vec3f& invDir, const std::array<int, 3>& dirIsNeg) const
+{
             float tEnter = FLT_MIN;
             float tExit = FLT_MAX;
 
@@ -86,11 +96,7 @@ class Bounds3
                 tExit = std::min(t_max, tExit);
             }
             return tEnter <= tExit && tExit >= 0;
-        }
-
-};
-
-
+}
 
 inline Bounds3 Union(const Bounds3& b1, const Bounds3& b2)
 {

@@ -34,9 +34,9 @@ class Scene
                     delete _objectsList[i]->_geometry;
                 }
 
-                if(_objectsList[i]->_material != nullptr){
-                    delete _objectsList[i]->_material;
-                }
+                // if(_objectsList[i]->_material != nullptr){
+                //     delete _objectsList[i]->_material;
+                // }
             }
 
         }
