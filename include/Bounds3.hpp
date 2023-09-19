@@ -86,14 +86,29 @@ inline bool Bounds3::IntersectP(const Ray& ray, const Vec3f& invDir, const std::
             float tEnter = FLT_MIN;
             float tExit = FLT_MAX;
 
+            //std::array<float, 3> inDir = {1.0f / , 1.0f / ray.direction.y, 1.0f / ray.direction.z};
+
             for (int i = 0; i < 3; ++i)
             {
+                // write code test if invDir is a product of dividing by zero
+                
+                if (std::isinf(invDir[i])){
+                    if (pMin[i] > ray.origin[i] || pMax[i] < ray.origin[i]){
+                        //return false;
+                        continue;
+                    }
+                    else{
+                        continue;
+                    }
+                }
                 float t_min = (pMin[i] - ray.origin[i]) * invDir[i];
                 float t_max = (pMax[i] - ray.origin[i]) * invDir[i];
                 if (dirIsNeg[i] == 0)
                     std::swap(t_min, t_max); // note: here must be ==0, because dirIsNeg is actually int(x>0)
                 tEnter = std::max(t_min, tEnter);
                 tExit = std::min(t_max, tExit);
+                
+
             }
             return tEnter <= tExit && tExit >= 0;
 }

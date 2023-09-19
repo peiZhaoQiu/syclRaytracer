@@ -90,7 +90,7 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
         int mid = objects.size() / 2;
         node->left = (build(std::vector<Object*>(objects.begin(), objects.begin() + mid)));
         node->right = (build(std::vector<Object*>(objects.begin() + mid, objects.end()))); 
-
+        node->object = nullptr;
         node->bounds = Union(node->left->bounds, node->right->bounds);
         node->area = node->left->area + node->right->area;
 
@@ -125,7 +125,7 @@ Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) cons
     {
         BVHNode* cur = q.front();
         q.pop();
-        if(cur->object)
+        if(cur->object != nullptr)
         {
             Intersection tmp = cur->object->getIntersection(ray);
             if(inter._distance > tmp._distance)
@@ -133,16 +133,21 @@ Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) cons
                 inter = tmp;
             }
         }
-        if (cur->left)
+        else
         {
-            q.push(cur->left);
-        }
+            if (cur->bounds.IntersectP(ray, indiv, dirIsNeg))
+            {
+                if (cur->left)
+                {
+                    q.push(cur->left);
+                }
 
-        if (cur->right)
-        {
-            q.push(cur->right);
+                if (cur->right)
+                {
+                    q.push(cur->right);
+                }
+            } 
         }
-        
     }
     return inter;
 }

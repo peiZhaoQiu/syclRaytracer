@@ -49,7 +49,7 @@ class Scene
     std::vector<Object*> _objectsList;
     std::vector<Material*> _materialList;
 
-    BVHAccel *_bvh;
+    BVHAccel *_bvh = nullptr;
     void buildBVH();
 
     void sampleLight(Intersection &pos, float &pdf)

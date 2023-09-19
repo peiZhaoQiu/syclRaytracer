@@ -12,10 +12,10 @@
 struct BVHNode
 {
 
-    Bounds3 bounds;
-    BVHNode* left;
-    BVHNode* right;
-    Object* object;
+    Bounds3 bounds = Bounds3();
+    BVHNode* left = nullptr;
+    BVHNode* right = nullptr;
+    Object* object = nullptr;
     int splitAxis=0, firstPrimOffset=0, nPrimitives=0;
     float area;
 

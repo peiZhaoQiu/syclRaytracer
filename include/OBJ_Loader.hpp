@@ -34,14 +34,17 @@ namespace OBJ_Loader
 
         tinyobj::ObjReader reader;
 
-        if (!reader.ParseFromFile(inputfile, reader_config)) {
-            if (!reader.Error().empty()) {
+        if (!reader.ParseFromFile(inputfile, reader_config)) 
+        {
+            if (!reader.Error().empty()) 
+            {
                 std::cerr << "TinyObjReader: " << reader.Error();
             }
             return result;
         }
 
-        if (!reader.Warning().empty()) {
+        if (!reader.Warning().empty()) 
+        {
             std::cout << "TinyObjReader: " << reader.Warning();
         }
 
@@ -72,7 +75,8 @@ namespace OBJ_Loader
             for (size_t i = 0; i < shape.mesh.indices.size(); i += 3) 
             {
                 
-                for (int j = 0; j < 3; ++j) {
+                for (int j = 0; j < 3; ++j) 
+                {
                     unsigned int index = shape.mesh.indices[i + j].vertex_index;
                     float vx = attrib.vertices[3 * index];
                     float vy = attrib.vertices[3 * index + 1];
@@ -81,18 +85,27 @@ namespace OBJ_Loader
                 }
             }
 
-            Triangle tri(vertices[0],vertices[1],vertices[2]);
-            result.Triangles.push_back(tri);
+            for (size_t i = 0; i < shape.mesh.indices.size(); i += 3)
+            {
+                unsigned int index1 = shape.mesh.indices[i].vertex_index;
+                unsigned int index2 = shape.mesh.indices[i + 1].vertex_index;
+                unsigned int index3 = shape.mesh.indices[i + 2].vertex_index;
 
-            for(auto& id:shape.mesh.material_ids)
+                Triangle tri(vertices[index1], vertices[index2], vertices[index3]);
+                result.Triangles.push_back(tri);
+            }
+
+            //Triangle tri(vertices[0],vertices[1],vertices[2]);
+            //result.Triangles.push_back(tri);
+        
+            for (auto &id : shape.mesh.material_ids)
             {
 
-                std::cout<< id << "  ";
+                std::cout << id << "  ";
                 result.materialIDs.push_back(id);
-            }          
+            }
         }
-
-        std::cout << "Loaded " << inputfile << std::endl;
+        std::cout << "Loaded " << inputfile << "have " << result.Triangles.size() << " Triangles."<<std::endl;
         return result;
     }
 
