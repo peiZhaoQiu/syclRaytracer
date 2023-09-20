@@ -72,17 +72,25 @@ namespace OBJ_Loader
             tinyobj::shape_t shape = shapes[i];
             std::cout << shape.name << std::endl;
             std::vector<Vec3f> vertices;
-            for (size_t i = 0; i < shape.mesh.indices.size(); i += 3) 
-            {
+            // for (size_t i = 0; i < shape.mesh.indices.size(); i += 3) 
+            // {
                 
-                for (int j = 0; j < 3; ++j) 
-                {
-                    unsigned int index = shape.mesh.indices[i + j].vertex_index;
-                    float vx = attrib.vertices[3 * index];
-                    float vy = attrib.vertices[3 * index + 1];
-                    float vz = attrib.vertices[3 * index + 2];
-                    vertices.push_back(Vec3f(vx, vy, vz));
-                }
+            //     for (int j = 0; j < 3; ++j) 
+            //     {
+            //         unsigned int index = shape.mesh.indices[i + j].vertex_index;
+            //         float vx = attrib.vertices[3 * index];
+            //         float vy = attrib.vertices[3 * index + 1];
+            //         float vz = attrib.vertices[3 * index + 2];
+            //         vertices.push_back(Vec3f(vx, vy, vz));
+            //     }
+            // }
+
+            for (size_t i = 0;i<attrib.vertices.size();i+=3)
+            {
+                float vx = attrib.vertices[i];
+                float vy = attrib.vertices[i+1];
+                float vz = attrib.vertices[i+2];
+                vertices.push_back(Vec3f(vx,vy,vz));
             }
 
             for (size_t i = 0; i < shape.mesh.indices.size(); i += 3)
@@ -101,7 +109,7 @@ namespace OBJ_Loader
             for (auto &id : shape.mesh.material_ids)
             {
 
-                std::cout << id << "  ";
+                std::cout << id << "  " << std::endl;
                 result.materialIDs.push_back(id);
             }
         }

@@ -30,7 +30,7 @@ class Triangle : public Geometry
         float x = get_random_float();
         float y = get_random_float();
         pos._position = _v1 * (1.0f - x) + _v2 * (x * (1.0f - y)) + _v3 * (x * y);
-        pos._normal = normal;
+        pos._normal = this->normal;
     }
 
 
@@ -65,26 +65,29 @@ Intersection Triangle::getIntersection(const Ray& ray)
     }
     double inv_det = 1.0f / det;
     Vec3f tvec = ray.origin - _v1;
-    u = dotProduct(tvec,pvec) * inv_det;
+    u = dotProduct(tvec,pvec)*inv_det;
     if(u < 0 || u > 1)
     {
         intersection._hit = false;
         return intersection;
     }
     Vec3f qvec = crossProduct(tvec,e1);
-    v = dotProduct(ray.direction,qvec) * inv_det;
+    v = dotProduct(ray.direction,qvec)*inv_det ;
     if(v < 0 || u + v > 1)
     {
         intersection._hit = false;
         return intersection;
     }
+
+
+
     t_tmp = dotProduct(e2,qvec) * inv_det;
 
-    if(t_tmp < MyEPSILON)
-    {
-        intersection._hit = false;
-        return intersection;
-    }
+    // if(t_tmp < MyEPSILON)
+    // {
+    //     intersection._hit = false;
+    //     return intersection;
+    // }
 
     intersection._hit = true;
     

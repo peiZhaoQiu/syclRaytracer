@@ -40,10 +40,7 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
 
     BVHNode* node = new BVHNode();
     //std::shared_ptr<BVHNode> node = std::make_shared<BVHNode>();
-    if (objects.size() == 0){
-        return node;
-    } 
-    else if (objects.size() == 1)
+    if (objects.size() == 1)
     {
         node->object = objects[0];
         node->bounds = objects[0]->getBounds();
@@ -103,8 +100,8 @@ BVHNode* BVHAccel::build(std::vector<Object*> objects)
 Intersection BVHAccel::Intersect(const Ray& ray) const
 {
     Intersection inter;
-    if (!root) return inter;
-    inter = getIntersection(root, ray);
+    if (!this->root) return inter;
+    inter = getIntersection(this->root, ray);
     return inter;
 }
 
@@ -126,18 +123,19 @@ Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) cons
     {
         BVHNode* cur = q.front();
         q.pop();
-        if(cur->object != nullptr)
+        if(cur->bounds.IntersectP(ray, indiv, dirIsNeg))
         {
-            Intersection tmp = cur->object->getIntersection(ray);
-            if(inter._distance > tmp._distance)
+            if (cur->object != nullptr)
             {
-                inter = tmp;
+                Intersection tmp = cur->object->getIntersection(ray);
+                if (tmp._hit && inter._distance > tmp._distance)
+                {
+                    inter = tmp;
+                }
             }
-        }
-        else
-        {
-            if (cur->bounds.IntersectP(ray, indiv, dirIsNeg))
+            else
             {
+
                 if (cur->left)
                 {
                     q.push(cur->left);
@@ -147,7 +145,8 @@ Intersection BVHAccel::getIntersection(const BVHNode* node, const Ray& ray) cons
                 {
                     q.push(cur->right);
                 }
-            } 
+                 
+            }
         }
     }
     return inter;

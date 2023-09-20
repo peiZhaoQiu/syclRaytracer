@@ -18,22 +18,42 @@ void Scene::buildBVH() {
 }
 
 
+// Intersection Scene::castRay(Ray inputRay)
+// {
+//     Intersection result;
+
+//     if (this->_bvh == nullptr){
+//         printf(" - BVH not built, building...\n");
+//         this->buildBVH();
+//     }
+
+//     if (this->_bvh != nullptr){
+//         result = this->_bvh->Intersect(inputRay);
+//     }
+
+//     return result;
+// }
+
 Intersection Scene::castRay(Ray inputRay)
 {
     Intersection result;
-
-    if (this->_bvh == nullptr){
-        printf(" - BVH not built, building...\n");
-        this->buildBVH();
+    float t;
+    float t_min = INFINITY;
+    for (size_t i = 0; i < _objectsList.size(); i++)
+    {
+        auto intersection = _objectsList[i]->getIntersection(inputRay);
+        if(intersection._hit)
+        {
+            t = intersection._distance;
+            if(t<t_min)
+            {
+                t_min = t;
+                result = intersection;
+            }
+        }
     }
-
-    if (this->_bvh != nullptr){
-        result = this->_bvh->Intersect(inputRay);
-    }
-
-    return result;
+    return result;   
 }
-
 void Scene::addMeshObj(std::string objFilePath, std::string objFile)
 {
     OBJ_result result = OBJ_Loader::addObject(objFilePath, objFile);

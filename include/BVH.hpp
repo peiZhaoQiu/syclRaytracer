@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <ctime>
+#include <ostream>
 #include "Object.hpp"
 #include "Bounds3.hpp"
 #include "Ray.hpp"
@@ -28,6 +29,32 @@ struct BVHNode
 
     BVHNode(Bounds3 b, Object* o): bounds(b), object(o) {}
     BVHNode(Bounds3 b, BVHNode* l, BVHNode* r): bounds(b), left(l), right(r) {}
+
+    std::string toString() const{
+        std::string curString;
+        curString = "(";
+        if (object != nullptr){
+            curString += " Object ";
+            std::string pMinstring = std::to_string(bounds.pMin.x) + " , " + std::to_string(bounds.pMin.y) + " , " + std::to_string(bounds.pMin.z);
+            std::string pMaxstring = std::to_string(bounds.pMax.x) +  ", " + std::to_string(bounds.pMax.y) + " , " + std::to_string(bounds.pMax.z);
+            curString = curString + pMinstring + " , " + pMaxstring;
+        }
+        else{
+            curString += " Node";
+            if(left != nullptr){
+                curString += " Left: " + left->toString();
+            }
+            if(right != nullptr){
+                curString += " Right: " + right->toString();
+            }
+        }
+        curString += ")";
+        return curString;
+    }
+    friend std::ostream & operator << (std::ostream &os, const BVHNode &v)
+    {
+        return os << v.toString(); 
+    }
 };
 
 
