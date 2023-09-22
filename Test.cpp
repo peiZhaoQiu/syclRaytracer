@@ -46,27 +46,27 @@ int main(){
   scene.addMeshObj(ModelDir, "right.obj");
   scene.addMeshObj(ModelDir, "light.obj");
 
-  Ray ray1(Vec3f(0.33f,0.33f,10.0f), Vec3f(0,0,1));
-  Ray ray2(Vec3f(1.00f,100.00f,1.0f), Vec3f(0,-1,0));
-  Ray ray3(Vec3f(150.00f,240.00f,167.0f), Vec3f(0,-1,0));
-  Ray ray4(Vec3f(278.0f, 278.0f, -800.0f), Vec3f(0,-1,0));
-  Ray ray5(Vec3f(1.00f,100.00f,1.0f), Vec3f(0,-1,0));
-  Ray ray6(Vec3f(150.0f, 240.0f, 167.0f), Vec3f(0,-1,0));
-  auto l = scene.castRay(ray1);
-  auto k = scene.castRay(ray2);
-  auto m = scene.castRay(ray3);
-  auto n = scene.castRay(ray4);
-  auto o = scene.castRay(ray5);
-  auto p = scene.castRay(ray6);
+  // Ray ray1(Vec3f(0.33f,0.33f,10.0f), Vec3f(0,0,1));
+  // Ray ray2(Vec3f(1.00f,100.00f,1.0f), Vec3f(0,-1,0));
+  // Ray ray3(Vec3f(150.00f,240.00f,167.0f), Vec3f(0,-1,0));
+  // Ray ray4(Vec3f(278.0f, 278.0f, -800.0f), Vec3f(0,-1,0));
+  // Ray ray5(Vec3f(1.00f,100.00f,1.0f), Vec3f(0,-1,0));
+  // Ray ray6(Vec3f(150.0f, 240.0f, 167.0f), Vec3f(0,-1,0));
+  // auto l = scene.castRay(ray1);
+  // auto k = scene.castRay(ray2);
+  // auto m = scene.castRay(ray3);
+  // auto n = scene.castRay(ray4);
+  // auto o = scene.castRay(ray5);
+  // auto p = scene.castRay(ray6);
 
   //std::cout <<scene._bvh->root->toString()<<std::endl;
 
-  std::cout << "l: " << l._hit << std::endl;
-  std::cout << "k: " << k._hit << std::endl;
-  std::cout << "m: " << m._hit << std::endl;
-  std::cout << "n: " << n._hit << std::endl;
-  std::cout << "o: " << o._hit << std::endl;
-  std::cout << "p: " << p._hit << std::endl;
+  // std::cout << "l: " << l._hit << std::endl;
+  // std::cout << "k: " << k._hit << std::endl;
+  // std::cout << "m: " << m._hit << std::endl;
+  // std::cout << "n: " << n._hit << std::endl;
+  // std::cout << "o: " << o._hit << std::endl;
+  // std::cout << "p: " << p._hit << std::endl;
 
 
 

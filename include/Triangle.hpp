@@ -2,23 +2,26 @@
 #include "Geometry.hpp"
 #include "common.hpp"
 
-
+class Geometry;
 class Triangle : public Geometry
 {
     public:
          
         Vec3f _v1,_v2,_v3;
-        Triangle (const Vec3f &v1,const Vec3f &v2, const Vec3f &v3):_v1(v1),_v2(v2),_v3(v3)
+        Triangle()
+            : Geometry(GeometryType::TRIANGLE){}
+        Triangle (const Vec3f &v1,const Vec3f &v2, const Vec3f &v3):_v1(v1),_v2(v2),_v3(v3),Geometry(GeometryType::TRIANGLE)
         {
             e1 = _v2 - _v1;
             e2 = _v3 - _v1;
             normal = crossProduct(e1,e2).normalized();
             area = (crossProduct(e1,e2)).length()*0.5f;
+            Geometry::_type = GeometryType::TRIANGLE;
         }
         ~Triangle(){}
 
-    bool intersect(const Ray& ray) override{};
-    Intersection getIntersection(const Ray& ray) override;
+    //bool Intersect_virtual(const Ray& ray) const;
+    Intersection getIntersection_virtual(const Ray& ray) const;
         
          
     float getArea() override{
@@ -46,7 +49,7 @@ class Triangle : public Geometry
 };
 
 
-Intersection Triangle::getIntersection(const Ray& ray) 
+Intersection Triangle::getIntersection_virtual(const Ray& ray) const
 {
     Intersection intersection;
     if(dotProduct(normal,ray.direction) > 0)
