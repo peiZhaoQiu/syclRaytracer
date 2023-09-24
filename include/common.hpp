@@ -26,3 +26,18 @@ inline float get_random_float()
     std::uniform_real_distribution<float> distribution(0.f, 1.f);
     return distribution(generator);
 }
+
+
+inline Vec3f toWorld(const Vec3f &a, const Vec3f &N){
+    Vec3f B, C;
+    if (std::fabs(N.x) > std::fabs(N.y)){
+        float invLen = 1.0f / std::sqrt(N.x * N.x + N.z * N.z);
+        C = Vec3f(N.z * invLen, 0.0f, -N.x *invLen);
+    }
+    else {
+        float invLen = 1.0f / std::sqrt(N.y * N.y + N.z * N.z);
+        C = Vec3f(0.0f, N.z * invLen, -N.y *invLen);
+    }
+    B = crossProduct(C, N);
+    return a.x * B + a.y * C + a.z * N;
+}

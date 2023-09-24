@@ -13,13 +13,6 @@
 #include "common.hpp"
 #include "Scene1.hpp"
 
-/* 
- * This is only required to make the tutorial compile even when
- * a custom namespace is set.
- */
-#if defined(RTC_NAMESPACE_USE)
-RTC_NAMESPACE_USE
-#endif
 
 
 int compoentToint(float x){
@@ -75,8 +68,8 @@ int main(){
 
 
   // Set up the camera parameters
-  int imageWidth = 1200/10;
-  int imageHeight = 960/10;
+  int imageWidth = 1200;
+  int imageHeight = 960;
   float fov = 40.0f; // Field of view in degrees
 
   
@@ -96,7 +89,7 @@ int main(){
         std::cout << "Error: Could not open file " << filename << std::endl;
         return -1;
     }
-    int ssp = 64*2;
+    int ssp = 32;
 
 
   // Render the image
@@ -114,7 +107,7 @@ int main(){
           
          
           
-          auto tem = scene.doRendering(ray, 0);
+          auto tem = scene.doRendering(ray,0);
 
           pixelColor = pixelColor + tem;
         }

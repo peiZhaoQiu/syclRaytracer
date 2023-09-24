@@ -24,11 +24,12 @@ class Triangle : public Geometry
     Intersection getIntersection_virtual(const Ray& ray) const;
         
          
-    float getArea() override{
+    float getArea_virtual()const{
         return this->area;
     }
 
-    void Sample(Intersection &pos, float &pdf) override{
+    void Sample_virtual(Intersection &pos, float &pdf)
+    {
         pdf = 1.0f / area;
         float x = get_random_float();
         float y = get_random_float();
@@ -37,7 +38,10 @@ class Triangle : public Geometry
     }
 
 
-    Bounds3 getBounds() override { return Union(Bounds3(_v1, _v2), _v3); }
+    Bounds3 getBounds_virtual() const
+    {
+         return Union(Bounds3(_v1, _v2), _v3); 
+    }
     
 
     private:

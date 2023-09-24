@@ -18,10 +18,10 @@ public:
     Geometry(GeometryType type) :_type(type) {}
     virtual ~Geometry(){}
     //bool intersect(const Ray& ray);
-    Intersection getIntersection(const Ray& ray);
-    virtual float getArea()= 0;
-    virtual void Sample(Intersection &pos,float &pdf)=0;
-    virtual Bounds3 getBounds() = 0;
+    Intersection getIntersection(const Ray& ray) ;
+    float getArea() ;
+    void Sample(Intersection &pos,float &pdf);
+    Bounds3 getBounds();
     GeometryType _type;
     //virtual bool hasEmit() = 0; 
 };
@@ -40,6 +40,42 @@ Intersection Geometry::getIntersection(const Ray& ray)
         return Intersection();
     }
 }
+
+void Geometry::Sample(Intersection &pos,float &pdf)
+{
+    switch (_type)
+    {
+    case GeometryType::TRIANGLE:
+        static_cast<Triangle*>(this)->Sample_virtual(pos,pdf);
+        break;
+    default:
+        break;
+    }
+}
+
+float Geometry::getArea()
+{
+    switch (_type)
+    {
+    case GeometryType::TRIANGLE:
+        return static_cast<Triangle*>(this)->getArea_virtual();
+    default:
+        return 0;
+    }
+}
+
+Bounds3 Geometry::getBounds() 
+{
+    switch (_type)
+    {
+    case GeometryType::TRIANGLE:
+        return static_cast<Triangle*>(this)->getBounds_virtual();
+    default:
+        return Bounds3();
+    }
+}
+
+
 
 
 
