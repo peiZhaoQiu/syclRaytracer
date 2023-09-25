@@ -2,7 +2,9 @@
 #include <cmath>
 #include <random>
 #include <limits>
-
+#ifdef ENABLE_SYCL
+    #include <oneapi/dpl/random>
+#endif
 #undef M_PI
 #define M_PI 3.14159265358979323846f
 
@@ -18,7 +20,15 @@ inline float clamp(float val, float low, float high) {
     else return val;
 }
 
+#ifdef ENABLE_SYCL
+float get_random_float()
+{
 
+    oneapi::dpl::minstd_rand engine;
+    oneapi::dpl::uniform_real_distribution<float> distribution(0.f, 1.f);
+    return distribution(engine);
+}
+#else    
 inline float get_random_float() 
 {
     std::random_device rd;
@@ -26,7 +36,7 @@ inline float get_random_float()
     std::uniform_real_distribution<float> distribution(0.f, 1.f);
     return distribution(generator);
 }
-
+#endif
 
 inline Vec3f toWorld(const Vec3f &a, const Vec3f &N){
     Vec3f B, C;

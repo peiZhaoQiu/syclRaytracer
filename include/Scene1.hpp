@@ -54,6 +54,8 @@ Intersection Scene::castRay(Ray inputRay)
     }
     return result;   
 }
+
+
 void Scene::addMeshObj(std::string objFilePath, std::string objFile)
 {
     OBJ_result result = OBJ_Loader::addObject(objFilePath, objFile);

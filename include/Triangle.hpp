@@ -28,13 +28,15 @@ class Triangle : public Geometry
         return this->area;
     }
 
-    void Sample_virtual(Intersection &pos, float &pdf)
+    SamplingRecord Sample_virtual()
     {
-        pdf = 1.0f / area;
+        SamplingRecord record;
+        record.pdf = 1.0f / area;
         float x = get_random_float();
         float y = get_random_float();
-        pos._position = _v1 * (1.0f - x) + _v2 * (x * (1.0f - y)) + _v3 * (x * y);
-        pos._normal = this->normal;
+        record.pos._position = _v1 * (1.0f - x) + _v2 * (x * (1.0f - y)) + _v3 * (x * y);
+        record.pos._normal = this->normal;
+        return record;
     }
 
 

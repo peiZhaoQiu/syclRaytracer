@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22.1)
 
 
+option(ENABLE_SYCL "Enable sycl envirnment" OFF)
+
 if(ENABLE_SYCL)
 set(CMAKE_C_COMPILER /opt/intel/oneapi/compiler/latest/linux/bin/icx)
 set(CMAKE_CXX_COMPILER /opt/intel/oneapi/compiler/latest/linux/bin/icpx)
@@ -42,7 +44,9 @@ ADD_EXECUTABLE(${PROJECT_NAME} ${CMAKE_SOURCE_DIR} Test.cpp) #external/tinyobjlo
 
 # TARGET_LINK_LIBRARIES(${PROJECT_NAME} embree)
 # TARGET_LINK_LIBRARIES(${PROJECT_NAME} glm::glm)
-if(ENABLE_SYCL)
+
+IF(ENABLE_SYCL)
+TARGET_COMPILE_DEFINITIONS( ${PROJECT_NAME} PRIVATE ENABLE_SYCL=${ENABLE_SYCL})
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/external/tinyobjloader /opt/intel/oneapi/compiler/latest/linux/include)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC tinyobjloader rayTracelib sycl)
 else()

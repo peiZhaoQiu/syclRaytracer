@@ -12,15 +12,21 @@ enum class GeometryType
     TRIANGLE 
 };
 
+struct SamplingRecord
+{
+    Intersection pos;
+    float pdf = 0.0f;
+};
+
 class Geometry
 {
 public:
     Geometry(GeometryType type) :_type(type) {}
-    virtual ~Geometry(){}
+    ~Geometry(){}
     //bool intersect(const Ray& ray);
     Intersection getIntersection(const Ray& ray) ;
     float getArea() ;
-    void Sample(Intersection &pos,float &pdf);
+    SamplingRecord Sample();
     Bounds3 getBounds();
     GeometryType _type;
     //virtual bool hasEmit() = 0; 
@@ -41,15 +47,15 @@ Intersection Geometry::getIntersection(const Ray& ray)
     }
 }
 
-void Geometry::Sample(Intersection &pos,float &pdf)
+SamplingRecord Geometry::Sample()
 {
+
     switch (_type)
     {
     case GeometryType::TRIANGLE:
-        static_cast<Triangle*>(this)->Sample_virtual(pos,pdf);
-        break;
+        return static_cast<Triangle*>(this)->Sample_virtual();
     default:
-        break;
+        return SamplingRecord();
     }
 }
 

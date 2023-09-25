@@ -68,8 +68,8 @@ int main(){
 
 
   // Set up the camera parameters
-  int imageWidth = 1200;
-  int imageHeight = 960;
+  int imageWidth = 1200/10;
+  int imageHeight = 960/10;
   float fov = 40.0f; // Field of view in degrees
 
   
@@ -78,7 +78,9 @@ int main(){
   Vec3f lookAt(278.0f, 278.0f, 0.0f); // Look at the center of the Cornell Box
   Vec3f up(0.0f, 1.0f, 0.0f); // Up direction
   std::cout << scene._objectsList.size() << std::endl;
-  
+  unsigned int seed = 123;  
+
+
   Camera camera(imageWidth, imageHeight, fov, cameraPosition, lookAt, up);
 
     std::string filename = "image.ppm"; 
@@ -107,7 +109,7 @@ int main(){
           
          
           
-          auto tem = scene.doRendering(ray,0);
+          auto tem = scene.doRendering(ray);
 
           pixelColor = pixelColor + tem;
         }

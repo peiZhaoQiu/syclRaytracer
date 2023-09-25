@@ -30,10 +30,11 @@ public:
         return intersection;
     }
     float getArea(){return _geometry->getArea();}
-    void Sample(Intersection &pos,float &pdf)
+    SamplingRecord Sample()
     {
-        pos._material = _material;
-        _geometry->Sample(pos,pdf);
+        SamplingRecord record = _geometry->Sample();
+        record.pos._material = _material;
+        return record;
     }
 
 
