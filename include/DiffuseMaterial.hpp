@@ -9,9 +9,9 @@ class diffuseMaterial: public Material{
             _type = DIFFUSE;
         }
 
-        Vec3f sample_virtual(const Vec3f &wi, const Vec3f &N) {
+        Vec3f sample_virtual(const Vec3f &wi, const Vec3f &N, RNG &rng) {
             // uniform sample on the hemisphere
-            float x_1 = get_random_float(), x_2 = get_random_float();
+            float x_1 = get_random_float(rng), x_2 = get_random_float(rng);
             float z = std::fabs(1.0f - 2.0f * x_1);
             float r = std::sqrt(1.0f - z * z), phi = 2 * M_PI * x_2;
             Vec3f localRay(r*std::cos(phi), r*std::sin(phi), z);

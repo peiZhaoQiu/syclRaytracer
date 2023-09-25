@@ -12,8 +12,10 @@
 #include <fstream>
 #include "common.hpp"
 #include "Scene1.hpp"
-
-
+#include <chrono>
+#ifdef ENABLE_SYCL
+  #include "sycl/sycl.hpp"
+#endif
 
 int compoentToint(float x){
 return (int)(255*(std::pow(clamp(x, 0.0, 1.0), 1/2.2)));
@@ -68,8 +70,8 @@ int main(){
 
 
   // Set up the camera parameters
-  int imageWidth = 1200/10;
-  int imageHeight = 960/10;
+  int imageWidth = 1200;
+  int imageHeight = 960;
   float fov = 40.0f; // Field of view in degrees
 
   
@@ -91,25 +93,96 @@ int main(){
         std::cout << "Error: Could not open file " << filename << std::endl;
         return -1;
     }
-    int ssp = 32;
+    int ssp = 64;
 
-
+  auto startTime = std::chrono::high_resolution_clock::now();
   // Render the image
+
+#ifdef ENABLE_SYCL
+
+sycl::queue myQueue;  
+std::cout << "Running on " << myQueue.get_device().get_info<sycl::info::device::name>() << std::endl;
+std::vector<int> image(imageWidth * imageHeight * 3);
+sycl::buffer<int, 1> imagebuf(image.data(), sycl::range<1>(image.size()));
+myQueue.submit([&](sycl::handler& cgh) {
+  sycl::stream out(1024, 256, cgh);
+
+  auto imageAcc = imagebuf.get_access<sycl::access::mode::write>(cgh);
+  cgh.parallel_for(sycl::range<2>(imageWidth, imageHeight), [=](sycl::id<2> index) {
+    int i = index[0];
+    int j = index[1];
+    Vec3f pixelColor(0.0f, 0.0f, 0.0f);
+    RNG rng(seed + i + j * imageWidth);
+    for (int s = 0; s < ssp; ++s) 
+    {
+
+      Vec3f rayDir = camera.getRayDirection(i, j, rng);
+       
+      Ray ray(camera.getPosition(), rayDir);
+      
+      
+      auto tem = scene.doRendering(ray, rng);
+
+      pixelColor = pixelColor + tem;
+    }
+
+    pixelColor = pixelColor/ ssp;
+
+      //std::cout << "progress : " << (float)(i + j * imageWidth) / (float)(imageWidth * imageHeight) * 100 << "%\r" << std::flush;
+
+      auto r = compoentToint(pixelColor.x);
+      auto g = compoentToint(pixelColor.y);
+      auto b = compoentToint(pixelColor.z);
+
+      int rindex = i + j * imageWidth;
+      int gindex = i + j * imageWidth + 1;
+      int bindex = i + j * imageWidth + 2;
+
+      imageAcc[rindex] = r;
+      imageAcc[gindex] = g;
+      imageAcc[bindex] = b;
+
+      //file << r << " " << g << " " << b << " "; 
+  });
+});
+myQueue.wait();
+myQueue.update_host(imagebuf.get_access());
+
+
+for (int i = 0; i < imageWidth; ++i) 
+{
+    for (int j = 0; j < imageHeight; ++j) 
+    {
+
+      int rindex = i + j * imageWidth;
+      int gindex = i + j * imageWidth + 1;
+      int bindex = i + j * imageWidth + 2;
+
+      auto r = image[rindex];
+      auto g = image[gindex];
+      auto b = image[bindex];
+      file << r << " " << g << " " << b << " "; 
+    }
+}
+
+
+
+#else
   for (int j = 0; j < imageHeight; ++j) 
   {
       for (int i = 0; i < imageWidth; ++i) 
       {
         Vec3f pixelColor(0.0f, 0.0f, 0.0f);
+        RNG rng(seed + i + j * imageWidth);
         for (int s = 0; s < ssp; ++s) 
         {
 
-          Vec3f rayDir = camera.getRayDirection(i, j);
+          Vec3f rayDir = camera.getRayDirection(i, j, rng);
            
           Ray ray(camera.getPosition(), rayDir);
           
-         
           
-          auto tem = scene.doRendering(ray);
+          auto tem = scene.doRendering(ray, rng);
 
           pixelColor = pixelColor + tem;
         }
@@ -123,13 +196,17 @@ int main(){
           auto b = compoentToint(pixelColor.z);
 
           file << r << " " << g << " " << b << " "; 
-
-
-
       }
   }
 
+#endif
+
+
   file.close();
+
+  auto endTime = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> executionTime = endTime - startTime;
+  std::cout << "Rendering time = " << std::chrono::duration_cast<std::chrono::seconds>(endTime - startTime).count() << "s" << std::endl;
   std::cout << "Wrote image file " << filename << std::endl;
 
 

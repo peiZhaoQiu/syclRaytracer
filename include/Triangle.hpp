@@ -28,12 +28,12 @@ class Triangle : public Geometry
         return this->area;
     }
 
-    SamplingRecord Sample_virtual()
+    SamplingRecord Sample_virtual(RNG &rng)
     {
         SamplingRecord record;
         record.pdf = 1.0f / area;
-        float x = get_random_float();
-        float y = get_random_float();
+        float x = get_random_float(rng);
+        float y = get_random_float(rng);
         record.pos._position = _v1 * (1.0f - x) + _v2 * (x * (1.0f - y)) + _v3 * (x * y);
         record.pos._normal = this->normal;
         return record;
@@ -64,15 +64,15 @@ Intersection Triangle::getIntersection_virtual(const Ray& ray) const
         return intersection;
     }
 
-    double u,v,t_tmp = 0;
+    float u,v,t_tmp = 0;
     Vec3f pvec = crossProduct(ray.direction,e2);
-    double det = dotProduct(e1,pvec);
+    float det = dotProduct(e1,pvec);
     if(fabs(det) < MyEPSILON)
     {
         intersection._hit = false;
         return intersection;
     }
-    double inv_det = 1.0f / det;
+    float inv_det = 1.0f / det;
     Vec3f tvec = ray.origin - _v1;
     u = dotProduct(tvec,pvec)*inv_det;
     if(u < 0 || u > 1)
@@ -92,11 +92,11 @@ Intersection Triangle::getIntersection_virtual(const Ray& ray) const
 
     t_tmp = dotProduct(e2,qvec) * inv_det;
 
-    // if(t_tmp < MyEPSILON)
-    // {
-    //     intersection._hit = false;
-    //     return intersection;
-    // }
+    if(t_tmp < MyEPSILON)
+    {
+        intersection._hit = false;
+        return intersection;
+    }
 
     intersection._hit = true;
     

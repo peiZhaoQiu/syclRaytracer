@@ -26,11 +26,11 @@ public:
         return position;
     }
 
-    Vec3f getRayDirection(float x, float y) const {
+    Vec3f getRayDirection(float x, float y, RNG &rng) const {
         float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
         float halfFovTan = std::tan(Radians(fov) * 0.5f);
-        float randomX = get_random_float();
-        float randomY = get_random_float();
+        float randomX = get_random_float(rng);
+        float randomY = get_random_float(rng);
 
         //float viewX = (2.0f * (x + 0.5f) / width - 1.0f) * aspectRatio * halfFovTan;
         //float viewY = (2.0f * (y + 0.5f) / height - 1.0f) * halfFovTan;

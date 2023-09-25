@@ -41,7 +41,7 @@ class Scene
 
         }
 
-    Intersection castRay(Ray inputRay);
+    Intersection castRay(Ray inputRay) const;
 
     void addMeshObj(std::string objFilePath, std::string objFile);
 
@@ -52,20 +52,20 @@ class Scene
     BVHAccel *_bvh = nullptr;
     void buildBVH();
 
-    SamplingRecord sampleLight()
+    SamplingRecord sampleLight(RNG &rng) const
     {
-        static bool first = true;
-        static float emitArea = 0;
-        if (first){
+        bool first = true;
+        float emitArea = 0;
+        // if (first){
             for (size_t i = 0; i < _objectsList.size(); i++){
                 if (_objectsList[i]->_material->hasEmission()){
                     emitArea += _objectsList[i]->getArea();
                 }
             }
-            first = false;
-        }
+        //     first = false;
+        // }
 
-        float p = std::abs(get_random_float()) * emitArea;
+        float p = std::abs(get_random_float(rng)) * emitArea;
         float area = 0;
         for (size_t i = 0; i < _objectsList.size(); i++)
         {
@@ -73,7 +73,7 @@ class Scene
             {
                 area = area + _objectsList[i]->getArea();
                 if (area >= p){
-                   return _objectsList[i]->Sample();
+                   return _objectsList[i]->Sample(rng);
                     //pdf /= emitArea;
                     
                 }
@@ -86,15 +86,15 @@ class Scene
     
 
     
-    Vec3f doRendering(const Ray &initialRay)
+    Vec3f doRendering(const Ray &initialRay, RNG &rng) const
     {
         Vec3f L_total = Vec3f(0, 0, 0);
         //Vec3f L_indir = Vec3f(0, 0, 0);
         Ray currentRay = initialRay;
         int maxDepth = 50;
 
-        Vec3f indirLightParam[maxDepth];
-        Vec3f dirLight[maxDepth];
+        Vec3f indirLightParam[50];
+        Vec3f dirLight[50];
 
         for (int i = 0; i < maxDepth; i++)
         {
@@ -123,7 +123,7 @@ class Scene
             }
 
 
-            auto samplingResult = sampleLight();
+            auto samplingResult = sampleLight(rng);
             Intersection lightInter = samplingResult.pos;
             float lightPdf = samplingResult.pdf;
 
@@ -144,9 +144,9 @@ class Scene
 
             dirLight[depth] = L_dir;
 
-            if (depth < 3 || get_random_float() < 0.8f)
+            if (depth < 3 || get_random_float(rng) < 0.8f)
             {
-                outDirction = intersection._material->sample(currentRay.direction, intersection._normal);
+                outDirction = intersection._material->sample(currentRay.direction, intersection._normal,rng);
                 Ray outRay(intersection._position, outDirction);
                 Intersection outRayInter = castRay(outRay);
 

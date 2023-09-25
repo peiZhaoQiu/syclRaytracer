@@ -1,9 +1,12 @@
 #pragma once 
 #include <cmath>
-#include <random>
 #include <limits>
 #ifdef ENABLE_SYCL
     #include <oneapi/dpl/random>
+    typedef oneapi::dpl::minstd_rand RNG;
+#else
+    #include <random>
+    typedef std::mt19937 RNG;
 #endif
 #undef M_PI
 #define M_PI 3.14159265358979323846f
@@ -21,20 +24,18 @@ inline float clamp(float val, float low, float high) {
 }
 
 #ifdef ENABLE_SYCL
-float get_random_float()
+float get_random_float(RNG &rng)
 {
-
-    oneapi::dpl::minstd_rand engine;
     oneapi::dpl::uniform_real_distribution<float> distribution(0.f, 1.f);
-    return distribution(engine);
+    return distribution(rng);
 }
 #else    
-inline float get_random_float() 
+inline float get_random_float(RNG &rng) 
 {
-    std::random_device rd;
-    std::mt19937 generator(rd());
+    // std::random_device rd;
+    // std::mt19937 generator(rd());
     std::uniform_real_distribution<float> distribution(0.f, 1.f);
-    return distribution(generator);
+    return distribution(rng);
 }
 #endif
 

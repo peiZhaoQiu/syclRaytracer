@@ -30,9 +30,9 @@ public:
         return intersection;
     }
     float getArea(){return _geometry->getArea();}
-    SamplingRecord Sample()
+    SamplingRecord Sample(RNG &rng)
     {
-        SamplingRecord record = _geometry->Sample();
+        SamplingRecord record = _geometry->Sample(rng);
         record.pos._material = _material;
         return record;
     }

@@ -34,7 +34,7 @@ void Scene::buildBVH() {
 //     return result;
 // }
 
-Intersection Scene::castRay(Ray inputRay)
+Intersection Scene::castRay(Ray inputRay) const
 {
     Intersection result;
     float t;

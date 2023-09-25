@@ -26,7 +26,7 @@ class Material
         //virtual
         //Material();
         float pdf(const Vec3f &wi, const Vec3f &wo, const Vec3f &N);
-        Vec3f sample(const Vec3f &wi, const Vec3f &N);
+        Vec3f sample(const Vec3f &wi, const Vec3f &N, RNG &rng);
         Material(Vec3f emission, Vec3f specular, Vec3f diffuse): _emission(emission), _specular(specular), _diffuse(diffuse) {} 
         Vec3f eval(const Vec3f &wi, const Vec3f &wo, const Vec3f &N);               
 
@@ -53,11 +53,11 @@ float Material::pdf(const Vec3f &wi, const Vec3f &wo, const Vec3f &N){
     }
 }
 
-Vec3f Material::sample(const Vec3f &wi, const Vec3f &N){
+Vec3f Material::sample(const Vec3f &wi, const Vec3f &N, RNG &rng){
     switch (_type)
     {
     case DIFFUSE:
-        return static_cast<diffuseMaterial*>(this)->sample_virtual(wi, N);
+        return static_cast<diffuseMaterial*>(this)->sample_virtual(wi, N, rng);
     default:
         return Vec3f(0.0f, 0.0f, 0.0f);
     }

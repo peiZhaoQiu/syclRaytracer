@@ -26,7 +26,7 @@ public:
     //bool intersect(const Ray& ray);
     Intersection getIntersection(const Ray& ray) ;
     float getArea() ;
-    SamplingRecord Sample();
+    SamplingRecord Sample(RNG &rng);
     Bounds3 getBounds();
     GeometryType _type;
     //virtual bool hasEmit() = 0; 
@@ -47,13 +47,13 @@ Intersection Geometry::getIntersection(const Ray& ray)
     }
 }
 
-SamplingRecord Geometry::Sample()
+SamplingRecord Geometry::Sample(RNG &rng)
 {
 
     switch (_type)
     {
     case GeometryType::TRIANGLE:
-        return static_cast<Triangle*>(this)->Sample_virtual();
+        return static_cast<Triangle*>(this)->Sample_virtual(rng);
     default:
         return SamplingRecord();
     }
